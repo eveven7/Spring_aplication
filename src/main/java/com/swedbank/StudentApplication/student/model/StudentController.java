@@ -23,33 +23,47 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public Student replaceStudent(@RequestBody Student newStudent, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(student -> {
-                    student.setName(newStudent.getName());
-                    student.setSurname(newStudent.getSurname());
-                    return repository.save(student);
-                }).orElseGet(() -> {
-                    newStudent.setId(id);
-                    return repository.save(newStudent);
-                });
+    public ResponseEntity<Student> replaceStudent(@RequestBody Student newStudent, @PathVariable Long id) throws StudentNotFoundException {
+        Student student = repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        student.setName(newStudent.getName());
+        student.setSurname(newStudent.getSurname());
+        final var updatedStudent = repository.save(student);
+        return ResponseEntity.ok(updatedStudent);
+    }
 
+    @PostMapping
+    public void save(@RequestBody Student student){
+        repository.save(student);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> get(@PathVariable final long id) {
         return new ResponseEntity<>(repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id)), HttpStatus.ACCEPTED);
     }
+
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable final long id){
+    public void deleteStudent(@PathVariable final long id) {
         repository.deleteById(id);
     }
 
+    @PostMapping
+    public void save(@ResponseBody Student student) {
+        repository.save(student);
+
+    }
+
     @GetMapping("/first")
-    public Student getFirst() { return repository.getFirstStudent().get(0); }
+    public Student getFirst() {
+        return repository.getFirstStudent().get(0);
+    }
+
     @GetMapping("/second")
-    public Student getSecond() { return repository.getSecondStudent().get(0); }
+    public Student getSecond() {
+        return repository.getSecondStudent().get(0);
+    }
 
     @GetMapping("/byname")
-    public List<Student>  getByName(@RequestParam() String name) {return  repository.getByName(name);}
+    public List<Student> getByName(@RequestParam() String name) {
+        return repository.getByName(name);
+    }
 }
