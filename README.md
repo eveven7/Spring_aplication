@@ -4,5 +4,6 @@ SwedbankAcademy SpringBoot
 - Data base management tools Flyway
 - Exception handling 
 - Swagger CRUD
+- Spring basic annotations
 
 
