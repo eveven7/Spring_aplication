@@ -46,11 +46,6 @@ public class StudentController {
         repository.deleteById(id);
     }
 
-    @PostMapping
-    public void save(@ResponseBody Student student) {
-        repository.save(student);
-
-    }
 
     @GetMapping("/first")
     public Student getFirst() {
