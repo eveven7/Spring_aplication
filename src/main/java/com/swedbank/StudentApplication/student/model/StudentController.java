@@ -1,6 +1,6 @@
 package com.swedbank.StudentApplication.student.model;
 
-import com.swedbank.StudentApplication.student.model.Student;
+import com.swedbank.StudentApplication.student.model.exception.CountryNotFoundException;
 import com.swedbank.StudentApplication.student.model.exception.StudentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +32,23 @@ public class StudentController {
     }
 
     @PostMapping
-    public void save(@RequestBody Student student){
+    public void save(@RequestBody Student student) {
         repository.save(student);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> get(@PathVariable final long id) {
+    public ResponseEntity<Student> getById(@PathVariable final long id) {
         return new ResponseEntity<>(repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id)), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{country}")
+    public ResponseEntity<Student> getByCountry(@PathVariable String country) {
+        return new ResponseEntity<>(repository.findById(Long.valueOf(country)).orElseThrow(() -> new CountryNotFoundException(country)), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/getByPersonalNumber/{pnr}")
+    public ResponseEntity<Student> getByNr(@PathVariable final long pnr) {
+        return new ResponseEntity<>(repository.findByPnr(pnr), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
@@ -46,6 +56,10 @@ public class StudentController {
         repository.deleteById(id);
     }
 
+    @GetMapping("/getByCountry/{country}")
+    public Student getCountry(@PathVariable String country) {
+        return repository.findByCountry(country);
+    }
 
     @GetMapping("/first")
     public Student getFirst() {

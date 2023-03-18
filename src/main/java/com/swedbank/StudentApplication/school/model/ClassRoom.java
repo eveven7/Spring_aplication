@@ -1,6 +1,7 @@
-package com.swedbank.StudentApplication.student.model;
+package com.swedbank.StudentApplication.school.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swedbank.StudentApplication.school.model.Building;
 import lombok.Data;
 
 import javax.persistence.*;
